@@ -19,7 +19,6 @@ int jumlahDriver = 0;
 
 struct Pesanan{
     string namaMenu;
-    int jumlah;
     int total;
     string driver;
 };
@@ -28,46 +27,61 @@ int jumlahPesanan = 0;
 
 void tampilMenu(){
 	
-    cout << "\n======== DAFTAR MENU ========\n";
-    cout << left << setw(5) << "No"
-         << setw(20) << "Menu"
-         << setw(10) << "Harga" << endl;
-    for(int i = 0; i < jumlahMenu; i++){
-        cout << left << setw(5) << i+1
-             << setw(20) << menu[i].nama
-             << setw(10) << menu[i].harga
-             << endl;
-    }
+	if(jumlahMenu == 0){
+        cout << "\nBelum ada menu tersedia!\n";
+        return;
+    } else {
+		cout << "\n======== DAFTAR MENU ========\n";
+		cout << left << setw(5) << "No"
+			 << setw(20) << "Menu"
+			 << setw(10) << "Harga" << endl;
+		for(int i = 0; i < jumlahMenu; i++){
+			cout << left << setw(5) << i+1
+				 << setw(20) << menu[i].nama
+				 << setw(10) << menu[i].harga
+				 << endl;
+		}
+	}
     cout << "\n=============================\n";
 }
 
 void tampilDriver(){
-
-    cout << "\n======== DATA DRIVER ========\n";
-    for(int i = 0; i < jumlahDriver; i++){
-        cout << i+1 << ". "
-             << driver[i].nama
-             << " - ";
-        if(driver[i].tersedia){
-            cout << "Tersedia";
-        } else {
-            cout << "Tidak Tersedia";
-        }
-        cout << endl;
-    }
+	
+	if(jumlahDriver == 0){
+		cout << "\nBelum ada driver tersedia!\n";
+		return;
+	} else {	
+		cout << "\n======== DATA DRIVER ========\n";
+		for(int i = 0; i < jumlahDriver; i++){
+			cout << i+1 << ". "
+				 << driver[i].nama
+				 << " - ";
+			if(driver[i].tersedia){
+				cout << "Tersedia";
+			} else {
+				cout << "Tidak Tersedia";
+			}
+			cout << endl;
+		}
+		cout << "\n=============================\n";
+	}
 }
 
 void tampilPesanan(){
-
-    cout << "\n======== RIWAYAT PESANAN ========\n";
-    for(int i = 0; i < jumlahPesanan; i++){
-        cout << i+1 << ". "
-             << pesanan[i].namaMenu
-             << " | Jumlah : " << pesanan[i].jumlah
-             << " | Total : " << pesanan[i].total
-             << " | Driver : " << pesanan[i].driver << endl;
-    }
-    cout << "\n=============================\n";
+	
+	if(jumlahPesanan == 0){
+		cout << "\nBelum ada pesanan!\n";
+		return;
+	} else {
+		cout << "\n======== RIWAYAT PESANAN ========\n";
+		for(int i = 0; i < jumlahPesanan; i++){
+			cout << i+1 << ". "
+				 << pesanan[i].namaMenu
+				 << " | Total : " << pesanan[i].total
+				 << " | Driver : " << pesanan[i].driver << endl;
+		}
+	}
+	cout << "\n=============================\n";
 }
 
 void cariMenu(string key){
@@ -81,9 +95,11 @@ void cariMenu(string key){
             ketemu = true;
         }
     }
+    cout << "\n=============================\n";
     if(ketemu == false){
         cout << "\nMenu tidak ditemukan!\n";
     }
+    cout << "\n=============================\n";
 }
 
 bool cariDriver(int &indexDriver){
@@ -148,23 +164,36 @@ void bacaDriver(int &total) {
 }
 
 void tambahMenu() {
-    cin.ignore();
-    Menu menuBaru;
+	char lagi;
+		
+	do{	
+		cin.ignore();
+		Menu menuBaru;
+		
+		system("cls");
+		cout << "\nMasukkan menu yang ingin ditambahkan!" << endl;
+		cout << "Nama menu : "; 
+			getline(cin, menuBaru.nama);
+		cout << "Harga     : "; 
+			cin >> menuBaru.harga;
 
-    cout << "Masukkan menu yang ingin ditambahkan!" << endl;
-    cout << "Nama menu : "; getline(cin, menuBaru.nama);
-    cout << "Harga     : "; cin >> menuBaru.harga;
-
-    ofstream file("menu.txt", ios::app);
-    if(file.is_open()){
-        file << menuBaru.nama << "|" << menuBaru.harga << endl;
-        file.close();
-        cout << "\nMenu berhasil ditambahkan!" << endl;
-    } else {
-        cout << "\nGagal membuka file menu.txt" << endl;
-    }
-    cout << "\n=============================\n";
+		ofstream file("menu.txt", ios::app);
+		if(file.is_open()){
+			file << menuBaru.nama << "|" 
+				 << menuBaru.harga << endl;
+			file.close();
+		} 
+		cout << "\n=============================\n";
+		cout << "\nTambah menu lagi? (y/n) : ";
+		cout << "\n=============================\n";
+			cin >> lagi;
+	} while(lagi == 'y' || lagi == 'Y');
+	system("cls");
+	cout << "\nMenu berhasil ditambahkan!\n";
+	cout << "\n=============================\n";
+	bacaMenu(jumlahMenu);
 }
+
 
 void hapusMenu() {
     int totalMenu = 0;
@@ -192,26 +221,38 @@ void hapusMenu() {
         }
     }
     file.close();
-
-    cout << "Menu berhasil dihapus!" << endl;
+	system("cls");
+    cout << "Menu berhasil dihapus!\n";
+    cout << "\n=============================\n";
 }
 
 void tambahDriver() {
-    cin.ignore();
-    Driver driverBaru;
+	char lagi;
+	
+	do{
+		cin.ignore();
+		Driver driverBaru;
 
-    cout << "Masukkan driver yang ingin ditambahkan!" << endl;
-    cout << "Nama driver : "; getline(cin, driverBaru.nama);
-    driverBaru.tersedia = true;
+		cout << "Masukkan driver yang ingin ditambahkan!" << endl;
+		cout << "Nama driver : "; 
+			getline(cin, driverBaru.nama);
+		driverBaru.tersedia = true;
 
-    ofstream file("driver.txt", ios::app);
-    if(file.is_open()){
-        file << driverBaru.nama << "|" << driverBaru.tersedia << endl;
-        file.close();
-        cout << "Driver berhasil ditambahkan!" << endl;
-    } else {
-        cout << "Gagal membuka file driver.txt" << endl;
-    }
+		ofstream file("driver.txt", ios::app);
+		if(file.is_open()){
+			file << driverBaru.nama << "|"
+				 << driverBaru.tersedia << endl;
+			file.close();
+		}
+		cout << "\n=============================\n";
+		cout << "\nTambah driver lagi? (y/n) : ";
+		cout << "\n=============================\n";
+			cin >> lagi;
+	}while (lagi == 'y' || lagi == 'Y');
+	system("cls");
+	cout << "\nDriver berhasil ditambahkan!" << endl;
+	cout << "\n=============================\n";
+	bacaDriver(jumlahDriver);
 }
 
 void hapusDriver() {
@@ -225,7 +266,8 @@ void hapusDriver() {
 
     tampilDriver();
     int nomor;
-    cout << "Pilih nomor driver yang ingin dihapus: "; cin >> nomor;
+    cout << "\n=============================\n";
+    cout << "\nPilih nomor driver yang ingin dihapus: "; cin >> nomor;
 
     if(nomor < 1 || nomor > totalDriver){
         cout << "Nomor tidak valid!" << endl;
@@ -240,9 +282,13 @@ void hapusDriver() {
         }
     }
     file.close();
-
-    cout << "Driver berhasil dihapus!" << endl;
+	system("cls");
+    cout << "Driver berhasil dihapus!\n";
+    cout << "\n=============================\n";
+    bacaDriver(jumlahDriver);
 }
+
+
 
 void ubah_status_driver(){
 
@@ -251,7 +297,16 @@ void ubah_status_driver(){
     cout << "\nPilih driver : ";
     cin >> nomor;
     driver[nomor-1].tersedia = !driver[nomor-1].tersedia;
+    
+    ofstream file("driver.txt");
+	for(int i = 0; i < jumlahDriver; i++){
+		file << driver[i].nama << "|"
+			 << driver[i].tersedia << endl;
+	}
+	file.close();
+	system("cls");
     cout << "\nStatus driver berhasil diubah!\n";
+    cout << "\n=============================\n";
 }
 
 void simpanRiwayat(){
@@ -264,7 +319,6 @@ void simpanRiwayat(){
     file << "----------------------" << endl;
 
     file.close();
-    cout << "\nRiwayat pesanan berhasil disimpan!\n";
 }
 
 void pesanMakanan(){
@@ -276,13 +330,14 @@ void pesanMakanan(){
     string daftarMenu = "";
     string struk = "";
     
+    if(jumlahMenu == 0){
+		cout << "\nBelum ada menu tersedia!\n";
+		return;
+	}
+    
     if(cariDriver(indexDriver)){
        do{
 			system("cls");
-			cout << "========== STRUK PESANAN ==========\n";
-			cout << struk;
-			cout << "\nTotal Sementara : " << totalSemua << endl;
-
 			tampilMenu();
 
 			cout << "\nPilih menu : ";
@@ -313,13 +368,21 @@ void pesanMakanan(){
         system("cls");
 
         pesanan[jumlahPesanan].namaMenu = daftarMenu;
-        pesanan[jumlahPesanan].jumlah = 1;
         pesanan[jumlahPesanan].total = totalSemua;
         pesanan[jumlahPesanan].driver = driver[indexDriver].nama;
 
         driver[indexDriver].tersedia = false;
+		ofstream file("driver.txt");
+		for(int i = 0; i < jumlahDriver; i++){
+			file << driver[i].nama << "|"
+				 << driver[i].tersedia << endl;
+		}
+
+		file.close();
+		
         jumlahPesanan++;
         simpanRiwayat();
+        
         cout << "========== STRUK AKHIR ==========\n";
         cout << struk;
         cout << "-------------------------------\n";
@@ -329,6 +392,7 @@ void pesanMakanan(){
         cout << "\nPesanan berhasil!\n";
     } else {
         cout << "\nDriver tidak tersedia!\n";
+        cout << "\n=============================\n";
     }
 }
 
@@ -385,7 +449,8 @@ int main(){
                     cout << "4. Lihat Driver\n";
                     cout << "5. Tambah Driver\n";
                     cout << "6. Hapus Driver\n";
-                    cout << "7. Kembali\n";
+                    cout << "7. Ubah Status Driver\n";
+                    cout << "8. Kembali\n";
                     cout << "Pilih Menu: ";
                     cin >> m_admin;
                     system("cls");
@@ -395,21 +460,28 @@ int main(){
 							tampilMenu(); 
                         break;
                         case 2:
-							tambahMenu();   
+							tambahMenu();
+							 bacaMenu(jumlahMenu);   
                         break;
                         case 3:
-							hapusMenu();    
+							hapusMenu();  
+							 bacaMenu(jumlahMenu);  
                         break;
                         case 4: 
 							tampilDriver(); 
+							 bacaDriver(jumlahDriver);
                         break;
                         case 5: 
-							tambahDriver(); 
+							tambahDriver();
+							 bacaDriver(jumlahDriver);
                         break;
                         case 6: 
 							hapusDriver();  
                         break;
                         case 7: 
+							ubah_status_driver(); 
+                        break;
+                        case 8: 
 							diAdmin = false; 
                         break;
                         default: cout << "Pilihan tidak tersedia!\n";
@@ -424,8 +496,7 @@ int main(){
 							diAdmin = false;
                     }
                 }
-                break;
-
+            break;
             case 2:
                 system("cls");
                 cout << "SELAMAT DATANG!\n";
@@ -486,9 +557,11 @@ int main(){
                 }
             break;
             case 3:
+				system("cls");
                 cout << "==========================================================\n";
                 cout << "\nTerima Kasih sudah menggunakan Layanan Mini Go Food Kami!";
                 cout << "\nBy : Anis and Zhinta cihuyyyyy\n";
+                cout << "==========================================================\n";
                 return 0;
 
             default:
@@ -496,7 +569,6 @@ int main(){
                 break;
         }
     }while(true);
-
     return 0;
 }
 
